@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vexorin Design System — Style Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ================================================================
+       LAYER 1: RESET & BASE
+       ================================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #0A0A0F;
+      color: #FFFFFF;
+      font-family: 'IBM Plex Sans', 'Inter', system-ui, sans-serif;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ================================================================
+       LAYER 2: CSS CUSTOM PROPERTIES (Design Tokens)
+       ================================================================ */
+    :root {
+      /* Colors */
+      --color-void: #0A0A0F;
+      --color-depth: #0F1219;
+      --color-steel: #1A2B4A;
+      --color-signal: #00E5FF;
+      --color-alert: #FFB800;
+      --color-threat: #FF2D55;
+      --color-white: #FFFFFF;
+      --color-muted: #CCCCCC;
+
+      /* Typography */
+      --font-mono: 'IBM Plex Mono', 'JetBrains Mono', 'Courier New', monospace;
+      --font-sans: 'IBM Plex Sans', 'Inter', system-ui, sans-serif;
+      --font-size-display: 4.5rem;
+      --font-size-h1: 3.5rem;
+      --font-size-h2: 2.5rem;
+      --font-size-h3: 1.75rem;
+      --font-size-h4: 1.25rem;
+      --font-size-h5: 1rem;
+      --font-size-h6: 0.75rem;
+      --font-size-body: 1rem;
+      --font-size-body-sm: 0.875rem;
+      --font-size-mono: 0.875rem;
+      --font-size-label: 0.6875rem;
+
+      /* Spacing */
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 16px;
+      --space-4: 24px;
+      --space-5: 32px;
+      --space-6: 48px;
+      --space-7: 64px;
+      --space-8: 96px;
+
+      /* Layout */
+      --page-padding: 80px;
+      --max-width: 1280px;
+      --grid-gutter: 24px;
+
+      /* Motion */
+      --ease-default: cubic-bezier(0.2, 0, 0.38, 0.9);
+      --ease-enter: cubic-bezier(0, 0, 0.38, 0.9);
+      --ease-exit: cubic-bezier(0.2, 0, 1, 0.9);
+      --duration-fast: 100ms;
+      --duration-default: 200ms;
+      --duration-reveal: 600ms;
+      --duration-transition: 400ms;
+    }
+
+    /* ================================================================
+       LAYER 3: SNAP-SCROLL CONTAINER & SECTIONS
+       ================================================================ */
+    .snap-container {
+      height: 100vh;
+      height: 100dvh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    .snap-section {
+      height: 100vh;
+      height: 100dvh;
+      scroll-snap-align: start;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--space-8) var(--page-padding);
+    }
+
+    .snap-section > * {
+      max-width: var(--max-width);
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
+
+    /* ================================================================
+       LAYER 4: ANIMATION CLASSES
+       ================================================================ */
+    .animate-child {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity var(--duration-reveal) var(--ease-enter),
+                  transform var(--duration-reveal) var(--ease-enter);
+    }
+
+    .animate-child.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .animate-child:nth-child(1) { transition-delay: 0s; }
+    .animate-child:nth-child(2) { transition-delay: 0.1s; }
+    .animate-child:nth-child(3) { transition-delay: 0.2s; }
+    .animate-child:nth-child(4) { transition-delay: 0.3s; }
+    .animate-child:nth-child(5) { transition-delay: 0.4s; }
+
+    /* Progressive enhancement: no JS fallback */
+    .no-js .animate-child {
+      transition: none;
+      opacity: 1;
+      transform: none;
+    }
+
+    /* Accessibility: reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      .animate-child {
+        transition: none;
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ================================================================
+       LAYER 5: TYPOGRAPHY UTILITIES
+       ================================================================ */
+    .text-display {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-display);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+
+    .text-h1 {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-h1);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .text-h2 {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-h2);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+
+    .text-h3 {
+      font-family: var(--font-sans);
+      font-size: var(--font-size-h3);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .text-h4 {
+      font-family: var(--font-sans);
+      font-size: var(--font-size-h4);
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: 0.01em;
+    }
+
+    .text-h5 {
+      font-family: var(--font-sans);
+      font-size: var(--font-size-h5);
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0.01em;
+    }
+
+    .text-h6 {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-h6);
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .text-body {
+      font-family: var(--font-sans);
+      font-size: var(--font-size-body);
+      font-weight: 400;
+      line-height: 1.7;
+    }
+
+    .text-body-sm {
+      font-family: var(--font-sans);
+      font-size: var(--font-size-body-sm);
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    .text-mono {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-mono);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .text-label {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-label);
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .text-overline {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-label);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      display: block;
+      margin-bottom: var(--space-3);
+    }
+
+    .text-muted {
+      color: var(--color-muted);
+    }
+
+    /* ================================================================
+       LAYER 6: COMPONENT STYLES
+       ================================================================ */
+
+    /* Cards */
+    .card {
+      background: var(--color-depth);
+      border: 1px solid var(--color-steel);
+      padding: var(--space-4);
+      position: relative;
+      transition: border-color var(--duration-default) var(--ease-default);
+    }
+
+    .card:hover {
+      border-color: rgba(0, 229, 255, 0.4);
+    }
+
+    .card--accent {
+      border-left: 2px solid var(--color-signal);
+    }
+
+    .card--alert {
+      border-left: 2px solid var(--color-alert);
+    }
+
+    /* Badges / Tags */
+    .badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: var(--font-size-label);
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      background: var(--color-depth);
+      border: 1px solid var(--color-steel);
+      padding: 2px 6px;
+    }
+
+    .badge.badge--absolute {
+      position: absolute;
+      bottom: var(--space-3);
+      left: var(--space-3);
+    }
+
+    .badge--alert {
+      color: var(--color-alert);
+    }
+
+    .badge--threat {
+      color: var(--color-threat);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 0;
+      cursor: pointer;
+      transition: background-color var(--duration-default) var(--ease-default),
+                  border-color var(--duration-default) var(--ease-default),
+                  color var(--duration-default) var(--ease-default);
+    }
+
+    .btn--primary {
+      background: var(--color-signal);
+      color: var(--color-void);
+    }
+
+    .btn--primary:hover {
+      background: rgba(0, 229, 255, 0.85);
+    }
+
+    .btn--primary:active {
+      background: rgba(0, 229, 255, 0.7);
+    }
+
+    .btn--secondary {
+      background: transparent;
+      border: 1px solid var(--color-signal);
+      color: var(--color-signal);
+    }
+
+    .btn--secondary:hover {
+      background: rgba(0, 229, 255, 0.1);
+    }
+
+    .btn--ghost {
+      background: transparent;
+      border: 1px solid var(--color-steel);
+      color: var(--color-muted);
+    }
+
+    .btn--ghost:hover {
+      border-color: var(--color-muted);
+      color: var(--color-white);
+    }
+
+    /* Button Groups */
+    .btn-group {
+      display: flex;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      margin: var(--space-6) auto 0;
+    }
+
+    /* Dividers */
+    .divider {
+      border: none;
+      height: 2px;
+      background: var(--color-signal);
+      margin: var(--space-6) 0;
+    }
+
+    .divider--thin {
+      height: 1px;
+      background: var(--color-steel);
+      margin: var(--space-3) 0;
+    }
+
+    /* Metric Blocks */
+    .metric-block {
+      background: var(--color-depth);
+      border: 1px solid var(--color-steel);
+      border-left: 2px solid var(--color-signal);
+      padding: var(--space-4);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .metric-block--alert {
+      border-left-color: var(--color-alert);
+    }
+
+    .metric-block--threat {
+      border-left-color: var(--color-threat);
+    }
+
+    .metric-value {
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--color-white);
+    }
+
+    /* Data Tables */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--color-steel);
+      background: var(--color-depth);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .data-table thead {
+      background: var(--color-steel);
+    }
+
+    .data-table th {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-label);
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-white);
+      padding: 12px 16px;
+      text-align: left;
+      border-right: 1px solid var(--color-void);
+    }
+
+    .data-table th:last-child {
+      border-right: none;
+    }
+
+    .data-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--color-steel);
+      border-right: 1px solid var(--color-steel);
+    }
+
+    .data-table td:last-child {
+      border-right: none;
+    }
+
+    .data-table tbody tr:nth-child(even) {
+      background: var(--color-void);
+    }
+
+    .data-table tbody tr:hover {
+      border-left: 2px solid var(--color-signal);
+      padding-left: -1px;
+    }
+
+    .data-table .num {
+      text-align: right;
+      font-family: var(--font-mono);
+    }
+
+    /* Grid Utilities */
+    .grid {
+      display: grid;
+      gap: var(--grid-gutter);
+      width: 100%;
+    }
+
+    .grid-cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-cols-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .grid-cell {
+      background: var(--color-depth);
+      border: 1px solid var(--color-steel);
+      padding: var(--space-4);
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: var(--font-size-label);
+      text-transform: uppercase;
+    }
+
+    /* Color Swatch */
+    .swatch {
+      width: 100%;
+      height: 40px;
+      border: 1px solid var(--color-steel);
+      margin-bottom: var(--space-2);
+    }
+
+    /* ================================================================
+       LAYER 7: SECTION-SPECIFIC LAYOUT
+       ================================================================ */
+
+    /* Hero Section */
+    #hero {
+      position: relative;
+    }
+
+    .hero-content {
+      text-align: center;
+    }
+
+    .hero-content h1 {
+      margin-bottom: var(--space-3);
+    }
+
+    .hero-content .divider {
+      width: 60px;
+      height: 2px;
+      margin: var(--space-6) auto;
+      background: var(--color-signal);
+    }
+
+    .hero-content p {
+      margin-bottom: var(--space-3);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-badge {
+      position: absolute;
+      bottom: var(--space-6);
+      left: var(--space-6);
+    }
+
+    /* Section Header */
+    .section-header {
+      margin-bottom: var(--space-6);
+    }
+
+    .section-header h2 {
+      margin-bottom: var(--space-3);
+    }
+
+    /* Content Row */
+    .content-row {
+      margin-bottom: var(--space-7);
+    }
+
+    .content-row h3 {
+      margin-bottom: var(--space-4);
+    }
+
+    /* Typography Showcase */
+    .type-showcase {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-7);
+    }
+
+    .type-showcase-row {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .type-showcase-row .text-overline {
+      margin-bottom: var(--space-2);
+      font-size: 10px;
+    }
+
+    /* Component Row */
+    .component-row {
+      display: flex;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    /* Motion Demo */
+    .motion-demo {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      background: var(--color-depth);
+      border: 1px solid var(--color-steel);
+      padding: var(--space-4);
+    }
+
+    .motion-preview {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      min-height: 120px;
+      justify-content: center;
+    }
+
+    .motion-preview-box {
+      width: 100%;
+      height: 40px;
+      background: var(--color-signal);
+      opacity: 0.3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .motion-spec {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      font-size: 12px;
+      font-family: var(--font-mono);
+      color: var(--color-muted);
+    }
+
+    .btn-replay {
+      margin-top: var(--space-2);
+    }
+
+    /* ================================================================
+       LAYER 8: SIDE NAVIGATION DOTS
+       ================================================================ */
+    .section-nav {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .nav-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--color-steel);
+      cursor: pointer;
+      transition: all var(--duration-default) var(--ease-default);
+    }
+
+    .nav-dot.active {
+      background: var(--color-signal);
+      height: 20px;
+    }
+
+    /* ================================================================
+       LAYER 9: MOBILE BREAKPOINT (max-width: 768px)
+       ================================================================ */
+    @media (max-width: 768px) {
+      :root {
+        --font-size-display: 3rem;
+        --font-size-h1: 2.25rem;
+        --font-size-h2: 1.75rem;
+        --font-size-h3: 1.375rem;
+        --font-size-h4: 1.125rem;
+        --font-size-h5: 0.975rem;
+        --font-size-h6: 0.7rem;
+        --font-size-body: 0.95rem;
+        --page-padding: 20px;
+        --space-8: 48px;
+        --space-6: 32px;
+      }
+
+      .snap-container {
+        scroll-snap-type: y proximity;
+      }
+
+      .snap-section {
+        height: auto;
+        min-height: 100svh;
+        overflow: visible;
+        justify-content: flex-start;
+        padding-top: var(--space-6);
+      }
+
+      .grid-cols-2 { grid-template-columns: 1fr; }
+      .grid-cols-3 { grid-template-columns: 1fr; }
+      .grid-cols-4 { grid-template-columns: 1fr 1fr; }
+
+      .swatch {
+        height: 32px;
+      }
+
+      .section-nav {
+        display: none;
+      }
+
+      .hero-badge {
+        position: static;
+        margin-top: var(--space-6);
+        display: inline-block;
+      }
+
+      .btn-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+
+      .component-row {
+        flex-direction: column;
+      }
+
+      .component-row .btn {
+        width: 100%;
+      }
+
+      /* Hide intermediate heading levels on mobile */
+      .type-showcase .text-h4,
+      .type-showcase .text-h5,
+      .type-showcase .text-h6 {
+        display: none;
+      }
+
+      .metric-value {
+        font-size: 36px;
+      }
+
+      .motion-demo {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .grid-cols-4 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="snap-container" id="container">
+
+    <!-- SECTION 00: HERO -->
+    <section class="snap-section" id="hero" data-section="hero">
+      <div class="hero-content">
+        <p class="text-overline animate-child">VXRN-BRAND — RECOGNITION SUBSTRATE</p>
+        <h1 class="text-display animate-child">VEXORIN</h1>
+        <div class="divider animate-child" style="width: 60px; margin: var(--space-6) auto;"></div>
+        <p class="text-body animate-child">The recognition substrate for institutional capital.</p>
+        <p class="text-body text-muted animate-child">We surface what moves markets before it moves them. Real-time, institutional-grade, zero noise.</p>
+        <div class="btn-group animate-child">
+          <button class="btn btn--primary">REQUEST ACCESS</button>
+          <button class="btn btn--secondary">VIEW DOCUMENTATION</button>
+        </div>
+      </div>
+      <span class="badge badge--absolute">VXRN-HERO</span>
+    </section>
+
+    <!-- SECTION 01: COLOR SYSTEM -->
+    <section class="snap-section" id="color-system" data-section="color-system">
+      <div class="section-header animate-child">
+        <p class="text-overline">01 — COLOR SYSTEM</p>
+        <h2 class="text-h2">Design Tokens</h2>
+      </div>
+      <div class="divider animate-child"></div>
+      <div class="grid grid-cols-4 animate-child" style="margin-top: var(--space-6);">
+        <div class="card">
+          <div class="swatch" style="background: var(--color-void);"></div>
+          <p class="text-label">--color-void</p>
+          <p class="text-mono text-muted">#0A0A0F</p>
+          <p class="text-body-sm text-muted">Page background</p>
+        </div>
+        <div class="card">
+          <div class="swatch" style="background: var(--color-depth);"></div>
+          <p class="text-label">--color-depth</p>
+          <p class="text-mono text-muted">#0F1219</p>
+          <p class="text-body-sm text-muted">Card backgrounds</p>
+        </div>
+        <div class="card">
+          <div class="swatch" style="background: var(--color-steel);"></div>
+          <p class="text-label">--color-steel</p>
+          <p class="text-mono text-muted">#1A2B4A</p>
+          <p class="text-body-sm text-muted">Borders & dividers</p>
+        </div>
+        <div class="card">
+          <div class="swatch" style="background: var(--color-signal);"></div>
+          <p class="text-label">--color-signal</p>
+          <p class="text-mono text-muted">#00E5FF</p>
+          <p class="text-body-sm text-muted">Primary accent</p>
+        </div>
+        <div class="card">
+          <div class="swatch" style="background: var(--color-alert);"></div>
+          <p class="text-label">--color-alert</p>
+          <p class="text-mono text-muted">#FFB800</p>
+          <p class="text-body-sm text-muted">Warning states</p>
+        </div>
+        <div class="card">
+          <div class="swatch" style="background: var(--color-threat);"></div>
+          <p class="text-label">--color-threat</p>
+          <p class="text-mono text-muted">#FF2D55</p>
+          <p class="text-body-sm text-muted">Critical alerts</p>
+        </div>
+        <div class="card">
+          <div class="swatch" style="background: var(--color-white);"></div>
+          <p class="text-label">--color-white</p>
+          <p class="text-mono text-muted">#FFFFFF</p>
+          <p class="text-body-sm text-muted">Primary text</p>
+        </div>
+        <div class="card">
+          <div class="swatch" style="background: var(--color-muted);"></div>
+          <p class="text-label">--color-muted</p>
+          <p class="text-mono text-muted">#CCCCCC</p>
+          <p class="text-body-sm text-muted">Secondary text</p>
+        </div>
+      </div>
+      <span class="badge badge--absolute">VXRN-COLOR</span>
+    </section>
+
+    <!-- SECTION 02: TYPOGRAPHY -->
+    <section class="snap-section" id="typography" data-section="typography">
+      <div class="section-header animate-child">
+        <p class="text-overline">02 — TYPOGRAPHY</p>
+        <h2 class="text-h2">Type System</h2>
+      </div>
+      <div class="divider animate-child"></div>
+      <div class="type-showcase animate-child" style="margin-top: var(--space-6);">
+        <div class="type-showcase-row">
+          <span class="text-overline">DISPLAY / IBM PLEX MONO / 700 / 4.5REM</span>
+          <p class="text-display">The Institutional Standard</p>
+        </div>
+        <div class="divider--thin"></div>
+        <div class="type-showcase-row">
+          <span class="text-overline">H1 / IBM PLEX MONO / 700 / 3.5REM</span>
+          <h1 class="text-h1">Precision Over Decoration</h1>
+        </div>
+        <div class="divider--thin"></div>
+        <div class="type-showcase-row">
+          <span class="text-overline">H2 / IBM PLEX MONO / 600 / 2.5REM</span>
+          <h2 class="text-h2">Design Tokens</h2>
+        </div>
+        <div class="divider--thin"></div>
+        <div class="type-showcase-row">
+          <span class="text-overline">H3 / IBM PLEX SANS / 700 / 1.75REM</span>
+          <h3 class="text-h3">Subsection heading</h3>
+        </div>
+        <div class="divider--thin"></div>
+        <div class="type-showcase-row">
+          <span class="text-overline">H4 / IBM PLEX SANS / 600 / 1.25REM</span>
+          <h4 class="text-h4">Component heading</h4>
+        </div>
+        <div class="divider--thin"></div>
+        <div class="type-showcase-row">
+          <span class="text-overline">H5 / IBM PLEX SANS / 600 / 1REM</span>
+          <h5 class="text-h5">Card heading</h5>
+        </div>
+        <div class="divider--thin"></div>
+        <div class="type-showcase-row">
+          <span class="text-overline">H6 / IBM PLEX MONO / 500 / 0.75REM</span>
+          <h6 class="text-h6">Label heading</h6>
+        </div>
+        <div class="divider--thin"></div>
+        <div class="type-showcase-row">
+          <span class="text-overline">BODY / IBM PLEX SANS / 400 / 1REM</span>
+          <p class="text-body">Vexorin processes 40,000+ data streams across six evidence surfaces in real-time. The platform reads the geometric shape of coordinated market manipulation before broader market recognition catches up. Every component carries precision.</p>
+        </div>
+        <div class="divider--thin"></div>
+        <div class="type-showcase-row">
+          <span class="text-overline">MONO / IBM PLEX MONO / 400 / 0.875REM</span>
+          <p class="text-mono">SIGNAL_DETECTED: true | CONFIDENCE: 0.94 | LATENCY: 45ms</p>
+        </div>
+        <div class="divider--thin"></div>
+        <div class="type-showcase-row">
+          <span class="text-overline">LABEL / IBM PLEX MONO / 500 / 0.6875REM</span>
+          <span class="badge">VXRN-TYPE-SPECIMEN</span>
+        </div>
+      </div>
+      <span class="badge badge--absolute">VXRN-TYPOGRAPHY</span>
+    </section>
+
+    <!-- SECTION 03: COMPONENTS -->
+    <section class="snap-section" id="components" data-section="components">
+      <div class="section-header animate-child">
+        <p class="text-overline">03 — COMPONENTS</p>
+        <h2 class="text-h2">UI Components</h2>
+      </div>
+      <div class="divider animate-child"></div>
+
+      <div class="content-row animate-child" style="margin-top: var(--space-6);">
+        <h3 class="text-h3">Cards</h3>
+        <div class="grid grid-cols-3" style="margin-top: var(--space-4);">
+          <div class="card">
+            <h5 class="text-h5">Default Panel</h5>
+            <div class="divider--thin"></div>
+            <p class="text-body-sm text-muted">Standard card component with border.</p>
+            <span class="badge badge--absolute">VXRN-CARD</span>
+          </div>
+          <div class="card card--accent">
+            <h5 class="text-h5">Accent Variant</h5>
+            <div class="divider--thin"></div>
+            <p class="text-body-sm text-muted">Left SIGNAL border for emphasis.</p>
+            <span class="badge badge--absolute">VXRN-CARD-ACCENT</span>
+          </div>
+          <div class="card card--alert">
+            <h5 class="text-h5">Alert Variant</h5>
+            <div class="divider--thin"></div>
+            <p class="text-body-sm text-muted">Left ALERT border for warnings.</p>
+            <span class="badge badge--absolute">VXRN-CARD-ALERT</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-row animate-child">
+        <h3 class="text-h3">Buttons</h3>
+        <div class="component-row" style="margin-top: var(--space-4);">
+          <button class="btn btn--primary">PRIMARY ACTION</button>
+          <button class="btn btn--secondary">SECONDARY ACTION</button>
+          <button class="btn btn--ghost">GHOST ACTION</button>
+        </div>
+      </div>
+
+      <div class="content-row animate-child">
+        <h3 class="text-h3">Badges</h3>
+        <div class="badge-row" style="margin-top: var(--space-4);">
+          <span class="badge">VXRN-001</span>
+          <span class="badge badge--alert">VXRN-ALERT</span>
+          <span class="badge badge--threat">VXRN-THREAT</span>
+        </div>
+      </div>
+
+      <span class="badge badge--absolute">VXRN-COMPONENTS</span>
+    </section>
+
+    <!-- SECTION 04: DATA DISPLAY -->
+    <section class="snap-section" id="data-display" data-section="data-display">
+      <div class="section-header animate-child">
+        <p class="text-overline">04 — DATA DISPLAY</p>
+        <h2 class="text-h2">Metrics & Tables</h2>
+      </div>
+      <div class="divider animate-child"></div>
+
+      <div class="animate-child" style="margin-top: var(--space-6);">
+        <h3 class="text-h3" style="margin-bottom: var(--space-4);">Metric Blocks</h3>
+        <div class="grid grid-cols-3">
+          <div class="metric-block">
+            <p class="text-overline">SIGNALS PROCESSED</p>
+            <p class="metric-value">2.4M</p>
+            <p class="text-body-sm text-muted">per 24h period</p>
+            <span class="badge badge--absolute">VXRN-METRIC</span>
+          </div>
+          <div class="metric-block">
+            <p class="text-overline">CONFIDENCE THRESHOLD</p>
+            <p class="metric-value">0.94</p>
+            <p class="text-body-sm text-muted">institutional grade</p>
+            <span class="badge badge--absolute">VXRN-METRIC</span>
+          </div>
+          <div class="metric-block metric-block--alert">
+            <p class="text-overline">ACTIVE ALERTS</p>
+            <p class="metric-value" style="color: var(--color-alert);">3</p>
+            <p class="text-body-sm text-muted">require review</p>
+            <span class="badge badge--absolute badge--alert">VXRN-METRIC-ALERT</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="animate-child" style="margin-top: var(--space-6);">
+        <h3 class="text-h3" style="margin-bottom: var(--space-4);">Data Table</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>INSTRUMENT</th>
+              <th>SIGNAL</th>
+              <th class="num">CONFIDENCE</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>AAPL</td>
+              <td>Flow Manipulation</td>
+              <td class="num">0.94</td>
+              <td style="color: var(--color-signal);">ACTIVE</td>
+            </tr>
+            <tr>
+              <td>TSLA</td>
+              <td>Social Squeeze</td>
+              <td class="num">0.87</td>
+              <td style="color: var(--color-signal);">ACTIVE</td>
+            </tr>
+            <tr>
+              <td>MSFT</td>
+              <td>Spoofing</td>
+              <td class="num">0.76</td>
+              <td style="color: var(--color-alert);">WARNING</td>
+            </tr>
+            <tr>
+              <td>GOOGL</td>
+              <td>Insider Activity</td>
+              <td class="num">0.62</td>
+              <td style="color: var(--color-muted);">MONITOR</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <span class="badge badge--absolute">VXRN-DATA</span>
+    </section>
+
+    <!-- SECTION 05: MOTION & ANIMATION -->
+    <section class="snap-section" id="motion" data-section="motion">
+      <div class="section-header animate-child">
+        <p class="text-overline">05 — MOTION</p>
+        <h2 class="text-h2">Animation Principles</h2>
+      </div>
+      <div class="divider animate-child"></div>
+
+      <div class="grid grid-cols-2 animate-child" style="margin-top: var(--space-6);">
+        <div class="motion-demo">
+          <p class="text-h5" style="margin-bottom: var(--space-2);">Entry Animation</p>
+          <div class="motion-preview">
+            <div class="motion-preview-box animate-child" style="transition-delay: 0s;">Element 1</div>
+            <div class="motion-preview-box animate-child" style="transition-delay: 0.1s;">Element 2</div>
+            <div class="motion-preview-box animate-child" style="transition-delay: 0.2s;">Element 3</div>
+          </div>
+          <button class="btn btn--ghost btn-replay" data-demo="0">REPLAY</button>
+          <div class="motion-spec">
+            <span>opacity: 0 → 1</span>
+            <span>translateY(20px) → 0</span>
+            <span>duration: 600ms</span>
+            <span>easing: cubic-bezier(0, 0, 0.38, 0.9)</span>
+            <span>stagger: 100ms</span>
+          </div>
+        </div>
+
+        <div class="motion-demo">
+          <p class="text-h5" style="margin-bottom: var(--space-2);">Hover Transitions</p>
+          <div class="motion-preview" style="gap: var(--space-4);">
+            <button class="btn btn--primary" style="width: 100%; margin: 0;">Primary Button</button>
+            <div class="card" style="transition: border-color 200ms cubic-bezier(0.2, 0, 0.38, 0.9); cursor: pointer;">Card Component</div>
+          </div>
+          <div class="motion-spec" style="margin-top: var(--space-3);">
+            <span>duration: 200ms</span>
+            <span>easing: cubic-bezier(0.2, 0, 0.38, 0.9)</span>
+            <span>properties: border, opacity</span>
+            <span>no scale/transform</span>
+          </div>
+        </div>
+      </div>
+
+      <span class="badge badge--absolute">VXRN-MOTION</span>
+    </section>
+
+    <!-- SECTION 06: LAYOUT PATTERNS -->
+    <section class="snap-section" id="layout-patterns" data-section="layout-patterns">
+      <div class="section-header animate-child">
+        <p class="text-overline">06 — LAYOUT</p>
+        <h2 class="text-h2">Grid Patterns</h2>
+      </div>
+      <div class="divider animate-child"></div>
+
+      <div class="animate-child" style="margin-top: var(--space-6);">
+        <p class="text-label" style="margin-bottom: var(--space-3);">3-COLUMN GRID</p>
+        <div class="grid grid-cols-3">
+          <div class="grid-cell">CELL A</div>
+          <div class="grid-cell">CELL B</div>
+          <div class="grid-cell">CELL C</div>
+        </div>
+      </div>
+
+      <div class="animate-child" style="margin-top: var(--space-6);">
+        <p class="text-label" style="margin-bottom: var(--space-3);">4-COLUMN METRIC GRID</p>
+        <div class="grid grid-cols-4">
+          <div class="grid-cell">A</div>
+          <div class="grid-cell">B</div>
+          <div class="grid-cell">C</div>
+          <div class="grid-cell">D</div>
+        </div>
+      </div>
+
+      <div class="animate-child" style="margin-top: var(--space-6);">
+        <p class="text-label" style="margin-bottom: var(--space-3);">2-COLUMN SPLIT</p>
+        <div class="grid grid-cols-2">
+          <div class="grid-cell" style="min-height: 160px;">PRIMARY</div>
+          <div class="grid-cell" style="min-height: 160px;">SECONDARY</div>
+        </div>
+      </div>
+
+      <span class="badge badge--absolute">VXRN-LAYOUT</span>
+    </section>
+
+  </div>
+
+  <!-- SIDE NAVIGATION DOTS -->
+  <nav class="section-nav">
+    <div class="nav-dot active" data-section="hero"></div>
+    <div class="nav-dot" data-section="color-system"></div>
+    <div class="nav-dot" data-section="typography"></div>
+    <div class="nav-dot" data-section="components"></div>
+    <div class="nav-dot" data-section="data-display"></div>
+    <div class="nav-dot" data-section="motion"></div>
+    <div class="nav-dot" data-section="layout-patterns"></div>
+  </nav>
+
+  <script>
+    // Remove no-js class for progressive enhancement
+    document.documentElement.classList.remove('no-js');
+
+    // IntersectionObserver for section entry animations
+    const animationObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const children = entry.target.querySelectorAll('.animate-child');
+          children.forEach(child => {
+            child.classList.add('is-visible');
+          });
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.snap-section').forEach(section => {
+      animationObserver.observe(section);
+    });
+
+    // IntersectionObserver for nav dot active state
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const sectionId = entry.target.getAttribute('data-section');
+          document.querySelectorAll('.nav-dot').forEach(dot => {
+            dot.classList.toggle('active', dot.getAttribute('data-section') === sectionId);
+          });
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.snap-section').forEach(section => {
+      navObserver.observe(section);
+    });
+
+    // Nav dot click scrolling
+    document.querySelectorAll('.nav-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        const sectionId = dot.getAttribute('data-section');
+        const section = document.querySelector(`[data-section="${sectionId}"]`);
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Motion demo replay buttons
+    document.querySelectorAll('.btn-replay').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const demo = btn.closest('.motion-demo');
+        const boxes = demo.querySelectorAll('.motion-preview-box');
+        boxes.forEach(box => box.classList.remove('is-visible'));
+        void demo.offsetWidth; // Force reflow
+        requestAnimationFrame(() => {
+          boxes.forEach(box => box.classList.add('is-visible'));
+        });
+      });
+    });
+  </script>
+</body>
+</html>
