@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vexorin — The Recognition Substrate for Institutional Capital</title>
+  <meta name="description" content="Vexorin surfaces what moves markets before it moves them. Real-time, institutional-grade, zero noise.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+    body {
+      background: #0A0A0F;
+      color: #FFFFFF;
+      font-family: 'IBM Plex Sans', 'Inter', system-ui, sans-serif;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    :root {
+      --color-void: #0A0A0F;
+      --color-depth: #0F1219;
+      --color-steel: #1A2B4A;
+      --color-signal: #00E5FF;
+      --color-alert: #FFB800;
+      --color-threat: #FF2D55;
+      --color-white: #FFFFFF;
+      --color-muted: #CCCCCC;
+      --font-mono: 'IBM Plex Mono', 'JetBrains Mono', 'Courier New', monospace;
+      --font-sans: 'IBM Plex Sans', 'Inter', system-ui, sans-serif;
+      --font-size-display: 4.5rem;
+      --font-size-h1: 3.5rem;
+      --font-size-h2: 2.5rem;
+      --font-size-h3: 1.75rem;
+      --font-size-h4: 1.25rem;
+      --font-size-h5: 1rem;
+      --font-size-h6: 0.75rem;
+      --font-size-body: 1rem;
+      --font-size-body-sm: 0.875rem;
+      --font-size-mono: 0.875rem;
+      --font-size-label: 0.6875rem;
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 16px;
+      --space-4: 24px;
+      --space-5: 32px;
+      --space-6: 48px;
+      --space-7: 64px;
+      --space-8: 96px;
+      --page-padding: 80px;
+      --max-width: 1280px;
+      --grid-gutter: 24px;
+      --ease-default: cubic-bezier(0.2, 0, 0.38, 0.9);
+      --ease-enter: cubic-bezier(0, 0, 0.38, 0.9);
+      --ease-exit: cubic-bezier(0.2, 0, 1, 0.9);
+      --duration-fast: 100ms;
+      --duration-default: 200ms;
+      --duration-reveal: 600ms;
+      --duration-transition: 400ms;
+    }
+
+    /* ---- SNAP-SCROLL ---- */
+    .snap-container {
+      height: 100vh;
+      height: 100dvh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+    .snap-section {
+      height: 100vh;
+      height: 100dvh;
+      scroll-snap-align: start;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--space-8) var(--page-padding);
+    }
+    .snap-section > * {
+      max-width: var(--max-width);
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
+
+    /* ---- ANIMATION ---- */
+    .animate-child {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity var(--duration-reveal) var(--ease-enter),
+                  transform var(--duration-reveal) var(--ease-enter);
+    }
+    .animate-child.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .animate-child:nth-child(1) { transition-delay: 0s; }
+    .animate-child:nth-child(2) { transition-delay: 0.1s; }
+    .animate-child:nth-child(3) { transition-delay: 0.2s; }
+    .animate-child:nth-child(4) { transition-delay: 0.3s; }
+    .animate-child:nth-child(5) { transition-delay: 0.4s; }
+    .animate-child:nth-child(6) { transition-delay: 0.5s; }
+    .animate-child:nth-child(7) { transition-delay: 0.6s; }
+    .animate-child:nth-child(8) { transition-delay: 0.7s; }
+    .no-js .animate-child {
+      transition: none;
+      opacity: 1;
+      transform: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .animate-child {
+        transition: none;
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ---- TYPOGRAPHY ---- */
+    .text-display {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-display);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+    .text-h1 {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-h1);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    .text-h2 {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-h2);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    .text-h3 {
+      font-family: var(--font-sans);
+      font-size: var(--font-size-h3);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .text-h4 {
+      font-family: var(--font-sans);
+      font-size: var(--font-size-h4);
+      font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: 0.01em;
+    }
+    .text-h5 {
+      font-family: var(--font-sans);
+      font-size: var(--font-size-h5);
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0.01em;
+    }
+    .text-h6 {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-h6);
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .text-body {
+      font-family: var(--font-sans);
+      font-size: var(--font-size-body);
+      font-weight: 400;
+      line-height: 1.7;
+    }
+    .text-body-sm {
+      font-family: var(--font-sans);
+      font-size: var(--font-size-body-sm);
+      font-weight: 400;
+      line-height: 1.6;
+    }
+    .text-mono {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-mono);
+      font-weight: 400;
+      line-height: 1.5;
+    }
+    .text-label {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-label);
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .text-overline {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-label);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      display: block;
+      margin-bottom: var(--space-3);
+    }
+    .text-muted {
+      color: var(--color-muted);
+    }
+    .text-signal {
+      color: var(--color-signal);
+    }
+    .text-alert {
+      color: var(--color-alert);
+    }
+
+    /* ---- COMPONENTS ---- */
+    .card {
+      background: var(--color-depth);
+      border: 1px solid var(--color-steel);
+      padding: var(--space-4);
+      position: relative;
+      transition: border-color var(--duration-default) var(--ease-default);
+    }
+    .card:hover {
+      border-color: rgba(0, 229, 255, 0.4);
+    }
+    .card--accent {
+      border-left: 2px solid var(--color-signal);
+    }
+    .badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: var(--font-size-label);
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      background: var(--color-depth);
+      border: 1px solid var(--color-steel);
+      padding: 2px 6px;
+      position: absolute;
+      bottom: var(--space-3);
+      left: var(--space-3);
+    }
+    .badge--inline {
+      position: static;
+      margin-top: var(--space-4);
+    }
+    .btn {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 0;
+      cursor: pointer;
+      transition: background-color var(--duration-default) var(--ease-default),
+                  border-color var(--duration-default) var(--ease-default),
+                  color var(--duration-default) var(--ease-default);
+      text-decoration: none;
+    }
+    .btn--primary {
+      background: var(--color-signal);
+      color: var(--color-void);
+    }
+    .btn--primary:hover {
+      background: rgba(0, 229, 255, 0.85);
+    }
+    .btn--secondary {
+      background: transparent;
+      border: 1px solid var(--color-signal);
+      color: var(--color-signal);
+    }
+    .btn--secondary:hover {
+      background: rgba(0, 229, 255, 0.1);
+    }
+    .btn-group {
+      display: flex;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      margin: var(--space-6) auto 0;
+    }
+    .divider {
+      border: none;
+      height: 2px;
+      background: var(--color-signal);
+      margin: var(--space-6) 0;
+    }
+    .divider--thin {
+      height: 1px;
+      background: var(--color-steel);
+      margin: var(--space-3) 0;
+    }
+    .metric-block {
+      background: var(--color-depth);
+      border: 1px solid var(--color-steel);
+      border-left: 2px solid var(--color-signal);
+      padding: var(--space-4);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .metric-block--alert {
+      border-left-color: var(--color-alert);
+    }
+    .metric-value {
+      font-family: var(--font-mono);
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--color-white);
+    }
+    .grid {
+      display: grid;
+      gap: var(--grid-gutter);
+      width: 100%;
+    }
+    .grid-cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .grid-cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .grid-cols-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* ---- SECTION NAV ---- */
+    .section-nav {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 100;
+    }
+    .nav-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--color-steel);
+      cursor: pointer;
+      transition: all var(--duration-default) var(--ease-default);
+    }
+    .nav-dot.active {
+      background: var(--color-signal);
+      height: 20px;
+    }
+
+    /* ---- SECTION-SPECIFIC ---- */
+    .hero-content {
+      text-align: center;
+    }
+    .hero-content .divider {
+      width: 60px;
+      margin: var(--space-6) auto;
+    }
+    .hero-content p {
+      margin-bottom: var(--space-3);
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .section-header {
+      margin-bottom: var(--space-4);
+    }
+    .section-header h2 {
+      margin-bottom: var(--space-2);
+    }
+    .content-row {
+      margin-top: var(--space-6);
+    }
+    .content-row h3 {
+      margin-bottom: var(--space-4);
+    }
+
+    /* ---- FOOTER ---- */
+    .footer-row {
+      margin-top: var(--space-8);
+      padding-top: var(--space-6);
+      border-top: 1px solid var(--color-steel);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --font-size-display: 3rem;
+        --font-size-h1: 2.25rem;
+        --font-size-h2: 1.75rem;
+        --font-size-h3: 1.375rem;
+        --font-size-h4: 1.125rem;
+        --font-size-h5: 0.975rem;
+        --font-size-body: 0.95rem;
+        --page-padding: 20px;
+        --space-8: 48px;
+        --space-6: 32px;
+      }
+      .snap-container {
+        scroll-snap-type: y proximity;
+      }
+      .snap-section {
+        height: auto;
+        min-height: 100svh;
+        overflow: visible;
+        justify-content: flex-start;
+        padding-top: var(--space-6);
+      }
+      .grid-cols-2 { grid-template-columns: 1fr; }
+      .grid-cols-3 { grid-template-columns: 1fr; }
+      .grid-cols-4 { grid-template-columns: 1fr 1fr; }
+      .section-nav {
+        display: none;
+      }
+      .btn-group {
+        flex-direction: column;
+      }
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+      .metric-value {
+        font-size: 36px;
+      }
+      .hero-content .divider {
+        margin: var(--space-5) auto;
+      }
+      .footer-row {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+    @media (max-width: 480px) {
+      .grid-cols-4 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="snap-container" id="container">
+
+    <!-- SECTION 1: HERO -->
+    <section class="snap-section" id="hero" data-section="hero">
+      <div class="hero-content">
+        <p class="text-overline animate-child">VXRN-BRAND — RECOGNITION SUBSTRATE</p>
+        <h1 class="text-display animate-child">VEXORIN</h1>
+        <div class="divider animate-child"></div>
+        <p class="text-body animate-child">The recognition substrate for institutional capital.</p>
+        <p class="text-body text-muted animate-child">A multi-agent architecture that recognizes coordinated market manipulation by reading the geometric shape it leaves across six evidence surfaces — before broader market recognition catches up.</p>
+        <div class="btn-group animate-child">
+          <a href="#" class="btn btn--primary">REQUEST ACCESS</a>
+          <a href="#" class="btn btn--secondary">VIEW DECK</a>
+        </div>
+      </div>
+      <span class="badge">VXRN-HERO</span>
+    </section>
+
+    <!-- SECTION 2: THE ICEBERG -->
+    <section class="snap-section" id="category" data-section="category">
+      <div class="section-header animate-child">
+        <p class="text-overline">01 — THE CATEGORY</p>
+        <h2 class="text-h2">The Iceberg</h2>
+      </div>
+      <div class="divider animate-child"></div>
+      <p class="text-body animate-child" style="max-width: 720px; margin-bottom: var(--space-6);">
+        The institutional surveillance category is structurally broken. Current systems observe single surfaces, while modern coordinated manipulation distributes its evidence across multiple surfaces by design. The cases prosecuted are by definition the cases where single-surface evidence was sufficient. The harder, larger, faster-growing category is structurally invisible to current infrastructure.
+      </p>
+      <div class="grid grid-cols-3 animate-child">
+        <div class="metric-block">
+          <p class="text-overline">SEC ENFORCEMENT FY2024</p>
+          <p class="metric-value">$8.2B</p>
+          <p class="text-body-sm text-muted">Highest in agency history. Up 67% year-over-year from $4.9B in FY2023.</p>
+        </div>
+        <div class="metric-block metric-block--alert">
+          <p class="text-overline">EST. INTERCEPTION RATE</p>
+          <p class="metric-value text-alert">&lt;1%</p>
+          <p class="text-body-sm text-muted">FATF working estimates. Multi-surface manipulation is structurally harder to detect.</p>
+        </div>
+        <div class="metric-block">
+          <p class="text-overline">VALIDATED FAMILIES</p>
+          <p class="metric-value">7</p>
+          <p class="text-body-sm text-muted">Geometrically distinct manipulation families, validated across 50 enforcement-confirmed cases.</p>
+        </div>
+      </div>
+      <span class="badge">VXRN-CATEGORY</span>
+    </section>
+
+    <!-- SECTION 3: THE ARCHITECTURE -->
+    <section class="snap-section" id="architecture" data-section="architecture">
+      <div class="section-header animate-child">
+        <p class="text-overline">02 — THE ARCHITECTURE</p>
+        <h2 class="text-h2">BRAIN</h2>
+      </div>
+      <div class="divider animate-child"></div>
+      <p class="text-body animate-child" style="max-width: 720px; margin-bottom: var(--space-5);">
+        Vexorin reads coordinated manipulation across six nested evidence surfaces forming a continuous geometric manifold. Each surface is instrumented by dedicated agents, and BRAIN aggregates their signals into a single conviction score with full audit trail.
+      </p>
+      <div class="grid grid-cols-3 animate-child" style="margin-bottom: var(--space-5);">
+        <div class="card card--accent">
+          <h4 class="text-h4" style="margin-bottom: var(--space-2);">Context</h4>
+          <p class="text-body-sm text-muted">Macro and geopolitical conditions priming manipulation. ARGUS, ORION, MAGNUS.</p>
+        </div>
+        <div class="card card--accent">
+          <h4 class="text-h4" style="margin-bottom: var(--space-2);">Intent</h4>
+          <p class="text-body-sm text-muted">Coordinated narrative formation signaling premeditation. Scout, HERALD.</p>
+        </div>
+        <div class="card card--accent">
+          <h4 class="text-h4" style="margin-bottom: var(--space-2);">Positioning</h4>
+          <p class="text-body-sm text-muted">Capital deployed ahead of public information. ECHO, NEXUS.</p>
+        </div>
+        <div class="card card--accent">
+          <h4 class="text-h4" style="margin-bottom: var(--space-2);">Flow</h4>
+          <p class="text-body-sm text-muted">Price action and volume signatures. ATLAS, CIPHER.</p>
+        </div>
+        <div class="card card--accent">
+          <h4 class="text-h4" style="margin-bottom: var(--space-2);">Structure</h4>
+          <p class="text-body-sm text-muted">Microstructure and on-chain mechanics. ATLAS, on-chain agents.</p>
+        </div>
+        <div class="card card--accent">
+          <h4 class="text-h4" style="margin-bottom: var(--space-2);">Disclosure</h4>
+          <p class="text-body-sm text-muted">Filing patterns, insider timing, information asymmetry. CIPHER, ATLAS.</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 animate-child">
+        <div class="card">
+          <h4 class="text-h4" style="margin-bottom: var(--space-2);">On-Prem Default</h4>
+          <p class="text-body-sm text-muted">Customer data never leaves the customer's environment. Same architectural model as Palantir Foundry. Self-hosted and air-gapped deployment available.</p>
+        </div>
+        <div class="card">
+          <h4 class="text-h4" style="margin-bottom: var(--space-2);">Public-Data-Only Ingestion</h4>
+          <p class="text-body-sm text-muted">Scout ingests publicly available social posts, 20,000+ news sites, and public web content across 100+ languages. No private data. No biometrics. No GDPR Article 9 categories.</p>
+        </div>
+      </div>
+      <span class="badge">VXRN-ARCHITECTURE</span>
+    </section>
+
+    <!-- SECTION 4: GTM / CUSTOMER ACQUISITION -->
+    <section class="snap-section" id="gtm" data-section="gtm">
+      <div class="section-header animate-child">
+        <p class="text-overline">03 — DISTRIBUTION</p>
+        <h2 class="text-h2">Go-To-Market</h2>
+      </div>
+      <div class="divider animate-child"></div>
+      <p class="text-body animate-child" style="max-width: 720px; margin-bottom: var(--space-5);">
+        Three independent distribution tiers, each owned by a specific founder, executing distinct motions against the same buyer set. The paths compound: three independent routes to the same institutional buyer.
+      </p>
+      <div class="grid grid-cols-3 animate-child" style="margin-bottom: var(--space-5);">
+        <div class="card card--accent">
+          <p class="text-label text-signal" style="margin-bottom: var(--space-2);">TIER 1</p>
+          <h4 class="text-h4" style="margin-bottom: var(--space-2);">Direct Fund Relationships</h4>
+          <p class="text-body-sm text-muted">Credibility-driven institutional sales. Converts warm relationships into LOIs and deployed Scout+Carlton instances across mid-AUM hedge funds and regional asset managers.</p>
+        </div>
+        <div class="card card--accent">
+          <p class="text-label text-signal" style="margin-bottom: var(--space-2);">TIER 2</p>
+          <h4 class="text-h4" style="margin-bottom: var(--space-2);">LLM Term Optimization</h4>
+          <p class="text-body-sm text-muted">Technical positioning in AI-search and LLM term spaces. Surfaces Vexorin to institutional buyers conducting AI-assisted product research.</p>
+        </div>
+        <div class="card card--accent">
+          <p class="text-label text-signal" style="margin-bottom: var(--space-2);">TIER 3</p>
+          <h4 class="text-h4" style="margin-bottom: var(--space-2);">Organic Network Distribution</h4>
+          <p class="text-body-sm text-muted">Twenty years of understanding virality algorithms applied to surfacing Vexorin within Reddit, X, and financial-media-adjacent communities.</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 animate-child">
+        <div class="card">
+          <h4 class="text-h4" style="margin-bottom: var(--space-2);">Initial GTM (Years 1-3)</h4>
+          <p class="text-body-sm text-muted" style="margin-bottom: var(--space-2);">The underserved tier — mid-AUM hedge funds ($1-20B), regional asset managers, boutique firms, family offices with institutional ambition, and second-tier sovereign-wealth allocators.</p>
+          <p class="text-mono text-signal">YEAR 3 TARGET: 35-40 PRODUCTION CUSTOMERS</p>
+        </div>
+        <div class="card">
+          <h4 class="text-h4" style="margin-bottom: var(--space-2);">Long-Term Wedge (Years 3+)</h4>
+          <p class="text-body-sm text-muted" style="margin-bottom: var(--space-2);">~280 Tier-1 institutions globally with AUM &gt; $50B and active surveillance budgets &gt; $5M. Moat-defending customers, unlocked by deployed traction and validated marketplace.</p>
+          <p class="text-mono text-signal">ADDRESSABLE: ~280 INSTITUTIONS</p>
+        </div>
+      </div>
+      <span class="badge">VXRN-GTM</span>
+    </section>
+
+    <!-- SECTION 5: THE ROAD AHEAD -->
+    <section class="snap-section" id="roadmap" data-section="roadmap">
+      <div class="section-header animate-child">
+        <p class="text-overline">04 — THE ROAD AHEAD</p>
+        <h2 class="text-h2">Recognition Is The New Alpha</h2>
+      </div>
+      <div class="divider animate-child"></div>
+      <div class="grid grid-cols-3 animate-child" style="margin-bottom: var(--space-5);">
+        <div class="metric-block">
+          <p class="text-overline">STREAM 1</p>
+          <p class="text-h3" style="font-family: var(--font-mono); margin-bottom: 0;">Platform Fees</p>
+          <p class="text-body-sm text-muted">Per-seat subscription licensing for Scout and Carlton. Deployed on-prem within 2-3 days.</p>
+        </div>
+        <div class="metric-block">
+          <p class="text-overline">STREAM 2</p>
+          <p class="text-h3" style="font-family: var(--font-mono); margin-bottom: 0;">Agent Consumption</p>
+          <p class="text-body-sm text-muted">Usage-based fees as additional agents (ECHO, ATLAS, CIPHER) come online across the customer's ticker universe.</p>
+        </div>
+        <div class="metric-block">
+          <p class="text-overline">STREAM 3</p>
+          <p class="text-h3" style="font-family: var(--font-mono); margin-bottom: 0;">Data Marketplace</p>
+          <p class="text-body-sm text-muted">The Simulation Agent opens a validated data marketplace of customer-compounded weight intelligence.</p>
+        </div>
+      </div>
+      <p class="text-body text-muted animate-child" style="max-width: 640px; margin-bottom: var(--space-6);">
+        Vexorin's pre-seed round funds the engineering buildout that takes BRAIN from architectural specification to running code, brings three additional agents online, and ships the Simulation Agent that opens the Validated Data Marketplace.
+      </p>
+      <div class="btn-group animate-child">
+        <a href="#" class="btn btn--primary">REQUEST ACCESS</a>
+        <a href="#" class="btn btn--secondary">VIEW DECK</a>
+      </div>
+      <div class="footer-row animate-child">
+        <p class="text-label">VEXORIN.AI</p>
+        <p class="text-body-sm text-muted">The recognition substrate for institutional capital. Precision over decoration.</p>
+      </div>
+      <span class="badge" style="position: absolute; bottom: var(--space-3); left: var(--space-3);">VXRN-CTA</span>
+    </section>
+
+  </div>
+
+  <!-- SIDE NAVIGATION DOTS -->
+  <nav class="section-nav">
+    <div class="nav-dot active" data-section="hero"></div>
+    <div class="nav-dot" data-section="category"></div>
+    <div class="nav-dot" data-section="architecture"></div>
+    <div class="nav-dot" data-section="gtm"></div>
+    <div class="nav-dot" data-section="roadmap"></div>
+  </nav>
+
+  <script>
+    document.documentElement.classList.remove('no-js');
+
+    var animationObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var children = entry.target.querySelectorAll('.animate-child');
+          children.forEach(function(child) {
+            child.classList.add('is-visible');
+          });
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.snap-section').forEach(function(section) {
+      animationObserver.observe(section);
+    });
+
+    var navObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var sectionId = entry.target.getAttribute('data-section');
+          document.querySelectorAll('.nav-dot').forEach(function(dot) {
+            dot.classList.toggle('active', dot.getAttribute('data-section') === sectionId);
+          });
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.snap-section').forEach(function(section) {
+      navObserver.observe(section);
+    });
+
+    document.querySelectorAll('.nav-dot').forEach(function(dot) {
+      dot.addEventListener('click', function() {
+        var sectionId = dot.getAttribute('data-section');
+        var section = document.querySelector('[data-section="' + sectionId + '"]');
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
