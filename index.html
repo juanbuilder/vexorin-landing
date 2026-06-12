@@ -249,8 +249,11 @@
       border: 1px solid var(--color-steel);
       padding: 2px 6px;
       position: absolute;
+      z-index: 2;
       bottom: var(--space-3);
       left: var(--space-3);
+      width: auto;
+      max-width: none;
     }
     .badge--inline {
       position: static;
@@ -364,8 +367,41 @@
       height: 20px;
     }
 
+    /* ---- HERO VIDEO ---- */
+    .hero-video-container {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      max-width: none;
+      width: 100%;
+      margin: 0;
+      background: var(--color-void);
+    }
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+    .hero-video.active {
+      opacity: 1;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(135deg, rgba(10,10,15,0.7) 0%, rgba(10,10,15,0.35) 100%);
+      pointer-events: none;
+    }
+
     /* ---- SECTION-SPECIFIC ---- */
     .hero-content {
+      position: relative;
+      z-index: 2;
       text-align: center;
     }
     .hero-content .divider {
@@ -460,6 +496,13 @@
 
     <!-- SECTION 1: HERO -->
     <section class="snap-section" id="hero" data-section="hero">
+      <div class="hero-video-container">
+        <div class="hero-overlay"></div>
+        <video class="hero-video active" data-index="0" src="Hero/HeroMain.mp4" muted playsinline preload="auto"></video>
+        <video class="hero-video" data-index="1" src="Hero/Hero1.mp4" muted playsinline preload="auto"></video>
+        <video class="hero-video" data-index="2" src="Hero/Hero2.mp4" muted playsinline preload="auto"></video>
+        <video class="hero-video" data-index="3" src="Hero/Hero3.mp4" muted playsinline preload="auto"></video>
+      </div>
       <div class="hero-content">
         <p class="text-overline animate-child">VXRN-BRAND — RECOGNITION SUBSTRATE</p>
         <h1 class="text-display animate-child">VEXORIN</h1>
@@ -686,6 +729,47 @@
         }
       });
     });
+
+    /* ---- HERO VIDEO CAROUSEL ---- */
+    var heroVideos = document.querySelectorAll('#hero .hero-video');
+    var currentVideoIndex = 0;
+    var videoTimeout = null;
+
+    function playVideo(index) {
+      var video = heroVideos[index];
+      video.currentTime = 0;
+      video.play()['catch'](function() {});
+    }
+
+    function nextVideo() {
+      if (videoTimeout) {
+        clearTimeout(videoTimeout);
+        videoTimeout = null;
+      }
+      var oldIndex = currentVideoIndex;
+      currentVideoIndex = (currentVideoIndex + 1) % heroVideos.length;
+      heroVideos[oldIndex].classList.remove('active');
+      heroVideos[currentVideoIndex].classList.add('active');
+      playVideo(currentVideoIndex);
+      videoTimeout = setTimeout(nextVideo, 12000);
+    }
+
+    if (heroVideos.length > 0) {
+      var firstVideo = heroVideos[0];
+      function startHeroVideo() {
+        firstVideo.classList.add('active');
+        playVideo(0);
+        videoTimeout = setTimeout(nextVideo, 12000);
+      }
+      if (firstVideo.readyState >= 3) {
+        startHeroVideo();
+      } else {
+        firstVideo.addEventListener('loadeddata', startHeroVideo);
+      }
+      for (var i = 0; i < heroVideos.length; i++) {
+        heroVideos[i].addEventListener('ended', nextVideo);
+      }
+    }
   </script>
 </body>
 </html>
